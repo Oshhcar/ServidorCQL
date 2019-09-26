@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class BDCrear : Instruccion
+    public class BDCrear : Instruccion
     {
         public BDCrear(string id, bool ifNotExist, int linea, int columna) : base(linea, columna)
         {

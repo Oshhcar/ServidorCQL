@@ -16,7 +16,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL
 {
-    class AnalizadorCQL
+    public class AnalizadorCQL
     {
         public AnalizadorCQL()
         {

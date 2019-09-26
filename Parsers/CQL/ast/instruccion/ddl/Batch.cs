@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class Batch : Instruccion
+    public class Batch : Instruccion
     {
         public Batch(LinkedList<Instruccion> inst, int linea, int columna) : base(linea, columna)
         {

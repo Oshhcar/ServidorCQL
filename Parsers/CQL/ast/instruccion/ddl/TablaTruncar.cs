@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class TablaTruncar : Instruccion
+    public class TablaTruncar : Instruccion
     {
         public TablaTruncar(string id, int linea, int columna) : base(linea, columna)
         {

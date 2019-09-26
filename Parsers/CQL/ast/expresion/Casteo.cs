@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.instruccion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    class Casteo : Expresion
+    public class Casteo : Expresion
     {
         public Casteo(Tipo tipo, Expresion expr, int linea, int columna) : base(linea, columna)
         {

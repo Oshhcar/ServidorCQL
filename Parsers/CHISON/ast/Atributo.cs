@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CHISON.ast
 {
-    class Atributo : Instruccion
+    public class Atributo : Instruccion
     {
         public Atributo(Cadena id, Expresion valor, int linea, int columna) : base(linea, columna)
         {

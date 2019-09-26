@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.condicionales
 {
-    class Switch : Instruccion
+    public class Switch : Instruccion
     {
         public Switch(Expresion expr, LinkedList<Case> cases, int linea, int columna) : base(linea, columna)
         {

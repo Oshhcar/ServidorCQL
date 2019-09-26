@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.instruccion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    class Ternario : Expresion
+    public class Ternario : Expresion
     {
         public Ternario(Expresion expr, Expresion v, Expresion f, int linea, int columna) : base(linea, columna)
         {

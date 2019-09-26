@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class Return : Instruccion
+    public class Return : Instruccion
     {
         public Return(LinkedList<Expresion> exprs, int linea, int columna) : base(linea, columna)
         {

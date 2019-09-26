@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class Bloque : Instruccion
+    public class Bloque : Instruccion
     {
         public Bloque(LinkedList<NodoASTCQL> bloques, string cadena, int linea, int columna) : base(linea, columna)
         {

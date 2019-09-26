@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CHISON.ast
 {
-    class Databases : Instruccion
+    public class Databases : Instruccion
     {
         public Databases(object valor, int linea, int columna) : base(linea, columna)
         {

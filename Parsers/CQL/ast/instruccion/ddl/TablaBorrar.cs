@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class TablaBorrar : Instruccion
+    public class TablaBorrar : Instruccion
     {
         public TablaBorrar(string id, bool ifNotExist, int linea, int columna) : base(linea, columna)
         {

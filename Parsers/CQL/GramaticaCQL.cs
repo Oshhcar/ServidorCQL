@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL
 {
-    class GramaticaCQL : Grammar
+    public class GramaticaCQL : Grammar
     {
         public GramaticaCQL() : base(false)
         {

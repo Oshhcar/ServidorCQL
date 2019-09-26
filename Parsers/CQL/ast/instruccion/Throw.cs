@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class Throw : Instruccion
+    public class Throw : Instruccion
     {
         public Throw(string id, int linea, int columna) : base(linea, columna)
         {

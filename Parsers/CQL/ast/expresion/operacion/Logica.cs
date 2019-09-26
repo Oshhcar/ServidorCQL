@@ -9,7 +9,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion.operacion
 {
-    class Logica : Operacion
+    public class Logica : Operacion
     {
         public Logica(Expresion op1, Expresion op2, Operador op, int linea, int columna) : base(op1, op2, op, linea, columna) { }
 

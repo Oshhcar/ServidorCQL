@@ -9,7 +9,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion.operacion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.condicionales
 {
-    class Case : Instruccion
+    public class Case : Instruccion
     {
         public Case(Expresion expr, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

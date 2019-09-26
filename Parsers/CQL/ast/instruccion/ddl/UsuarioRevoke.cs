@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class UsuarioRevoke : Instruccion
+    public class UsuarioRevoke : Instruccion
     {
         public UsuarioRevoke(string id, string permiso, int linea, int columna) : base(linea, columna)
         {

@@ -9,7 +9,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CHISON.ast
 {
-    class Lista : Expresion
+    public class Lista : Expresion
     {
         public Lista(LinkedList<Expresion> valores, int linea, int columna) : base(linea, columna)
         {

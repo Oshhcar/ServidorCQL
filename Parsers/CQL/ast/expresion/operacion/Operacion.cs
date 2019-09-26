@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion.operacion
 {
-    class Operacion : Expresion
+    public class Operacion : Expresion
     {
 
         public Operacion(Expresion op1, Expresion op2, Operador op, int linea, int columna) : base(linea, columna)

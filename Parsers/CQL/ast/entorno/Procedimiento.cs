@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Procedimiento
+    public class Procedimiento
     {
         public Procedimiento(LinkedList<Identificador> parametro, LinkedList<Identificador> retorno, Bloque bloque)
         {

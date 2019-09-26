@@ -10,7 +10,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class Rollback : Instruccion
+    public class Rollback : Instruccion
     {
         public Rollback(int linea, int columna) : base(linea, columna) { }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.condicionales
 {
-    class SubIf : Instruccion
+    public class SubIf : Instruccion
     {
         public SubIf(Expresion cond, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

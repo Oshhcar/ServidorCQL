@@ -85,7 +85,7 @@ window.Modernizr = (function( window, document, undefined ) {
     inputs = {},
     attrs = {},
 
-    classes = [],
+    public classes = [],
 
     slice = classes.slice,
 
@@ -948,7 +948,7 @@ window.Modernizr = (function( window, document, undefined ) {
             featureName  = feature.toLowerCase();
             Modernizr[featureName] = tests[feature]();
 
-            classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
+            public classes.push((Modernizr[featureName] ? '' : 'no-') + featureName);
         }
     }
 

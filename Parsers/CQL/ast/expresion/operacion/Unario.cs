@@ -9,7 +9,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion.operacion
 {
-    class Unario : Operacion
+    public class Unario : Operacion
     {
         public Unario(Expresion op1, Operador op, int linea, int columna) : base(op1, null, op, linea, columna) { }
 

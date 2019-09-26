@@ -13,7 +13,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CHISON.ast
 {
-    class BloqueChison : Expresion
+    public class BloqueChison : Expresion
     {
         public BloqueChison(LinkedList<Instruccion> instrucciones, int linea, int columna) : base(linea, columna)
         {

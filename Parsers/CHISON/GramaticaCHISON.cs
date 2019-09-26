@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CHISON
 {
-    class GramaticaCHISON : Grammar
+    public class GramaticaCHISON : Grammar
     {
         public GramaticaCHISON() : base(false)
         {

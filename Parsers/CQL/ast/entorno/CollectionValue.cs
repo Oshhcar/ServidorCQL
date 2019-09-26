@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class CollectionValue
+    public class CollectionValue
     {
         public CollectionValue(object clave, object valor)
         {

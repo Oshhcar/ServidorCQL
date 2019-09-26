@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Date
+    public class Date
     {
         public Date(string date)
         {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Funcion
+    public class Funcion
     {
         public Funcion(LinkedList<Identificador> parametro, Bloque bloque)
         {

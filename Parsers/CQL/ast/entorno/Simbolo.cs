@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Simbolo
+    public class Simbolo
     {
 
         public Simbolo(Tipo tipo, Rol rol, string id)

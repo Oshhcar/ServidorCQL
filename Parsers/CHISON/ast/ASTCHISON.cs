@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CHISON.ast
 {
-    class ASTCHISON
+    public class ASTCHISON
     {
         public ASTCHISON(BloqueChison bloque)
         {

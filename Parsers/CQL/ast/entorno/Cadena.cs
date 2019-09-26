@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Cadena
+    public class Cadena
     {
         public Cadena(string valor)
         {

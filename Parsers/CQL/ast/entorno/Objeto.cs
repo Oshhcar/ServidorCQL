@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Objeto
+    public class Objeto
     {
         public Objeto(string id, Entorno entorno)
         {

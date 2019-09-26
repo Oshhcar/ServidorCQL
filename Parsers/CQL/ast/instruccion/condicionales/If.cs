@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.condicionales
 {
-    class If : Instruccion
+    public class If : Instruccion
     {
         public If(LinkedList<SubIf> subIfs, int linea, int columna) : base(linea, columna)
         {

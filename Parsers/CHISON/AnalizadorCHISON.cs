@@ -12,7 +12,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CHISON
 {
-    class AnalizadorCHISON
+    public class AnalizadorCHISON
     { 
 
         public ParseTree Raiz { get; set; }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ciclos
 {
-    class DoWhile : Instruccion
+    public class DoWhile : Instruccion
     {
         public DoWhile(Expresion expr, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

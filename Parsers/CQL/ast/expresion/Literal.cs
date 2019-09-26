@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    class Literal : Expresion
+    public class Literal : Expresion
     {
         public Literal(Tipo tipo, object valor, int linea, int columna) : base(linea, columna)
         {

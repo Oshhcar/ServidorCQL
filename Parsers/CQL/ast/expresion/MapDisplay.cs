@@ -9,7 +9,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    class MapDisplay : Expresion
+    public class MapDisplay : Expresion
     {
         public MapDisplay(LinkedList<CollectionValue> collection, int linea, int columna) : base(linea, columna)
         {

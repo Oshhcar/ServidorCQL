@@ -7,7 +7,7 @@ using GramaticasCQL.Parsers.CQL.ast.entorno;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class Continue : Instruccion
+    public class Continue : Instruccion
     {
         public Continue(int linea, int columna) : base(linea, columna) { }
 

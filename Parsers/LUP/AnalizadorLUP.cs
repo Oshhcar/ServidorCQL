@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.LUP
 {
-    class AnalizadorLUP
+    public class AnalizadorLUP
     {
         public ParseTree Raiz { get; set; }
 

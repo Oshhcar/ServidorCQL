@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class Eliminar : Instruccion
+    public class Eliminar : Instruccion
     {
         public Eliminar(string id, int linea, int columna) : base(linea, columna)
         {

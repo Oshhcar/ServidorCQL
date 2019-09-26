@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Cursor
+    public class Cursor
     {
         public Cursor(Seleccionar select)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    abstract class Instruccion : NodoASTCQL
+    public abstract class Instruccion : NodoASTCQL
     {
         public Instruccion(int linea, int columna) : base(linea, columna) { }
 

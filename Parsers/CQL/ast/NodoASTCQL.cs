@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast
 {
-    class NodoASTCQL
+    public class NodoASTCQL
     {
         public NodoASTCQL(int linea, int columna)
         {

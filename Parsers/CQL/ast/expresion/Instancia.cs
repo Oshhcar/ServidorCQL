@@ -8,7 +8,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    class Instancia : Expresion
+    public class Instancia : Expresion
     {
         public Instancia(string id, int linea, int columna) : base(linea, columna)
         {

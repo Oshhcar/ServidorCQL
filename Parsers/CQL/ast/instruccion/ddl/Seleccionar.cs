@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class Seleccionar : Instruccion
+    public class Seleccionar : Instruccion
     {
         public Seleccionar(LinkedList<Expresion> columnas, string id, int linea, int columna) : base(linea, columna)
         {
@@ -405,7 +405,7 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
             //return null;
         }
 
-        class ComparaTupla : IComparer<Tuple<string, string>>
+        public class ComparaTupla : IComparer<Tuple<string, string>>
         {
             public int Compare(Tuple<string, string> x, Tuple<string, string> y)
             {

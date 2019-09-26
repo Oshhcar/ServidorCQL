@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.LUP
 {
-    class GramaticaLUP : Grammar
+    public class GramaticaLUP : Grammar
     {
         public GramaticaLUP() : base(false)
         {

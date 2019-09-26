@@ -9,7 +9,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class Commit : Instruccion
+    public class Commit : Instruccion
     {
         public Commit(int linea, int columna) : base(linea, columna) { }
 

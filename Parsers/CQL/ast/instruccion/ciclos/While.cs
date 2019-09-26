@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ciclos
 {
-    class While : Instruccion
+    public class While : Instruccion
     {
         public While(Expresion expr, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

@@ -9,7 +9,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class TryCatch : Instruccion
+    public class TryCatch : Instruccion
     {
         public TryCatch(Bloque bloqueTry, LinkedList<Identificador> parametro, Bloque bloqueCatch, int linea, int columna) : base(linea, columna)
         {

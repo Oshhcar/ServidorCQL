@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.entorno
 {
-    class Collection
+    public class Collection
     {
         public Collection(Tipo tipo)
         {

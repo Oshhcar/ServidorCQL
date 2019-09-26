@@ -9,7 +9,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class ProcedimientoDef : Instruccion
+    public class ProcedimientoDef : Instruccion
     {
         public ProcedimientoDef(string id, LinkedList<Identificador> parametro, LinkedList<Identificador> retorno, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

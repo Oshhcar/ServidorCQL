@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class TablaCrear : Instruccion
+    public class TablaCrear : Instruccion
     {
         public TablaCrear(string id, LinkedList<Simbolo> simbolos, LinkedList<string> primary, int linea, int columna) : base(linea, columna)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    abstract class Expresion : NodoASTCQL
+    public abstract class Expresion : NodoASTCQL
     {
         public Expresion(int linea, int columna) : base(linea, columna) { Tipo = null; }
 

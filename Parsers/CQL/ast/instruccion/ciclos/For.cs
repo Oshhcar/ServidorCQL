@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ciclos
 {
-    class For : Instruccion
+    public class For : Instruccion
     {
         public For(Instruccion init, Expresion expr, NodoASTCQL update, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

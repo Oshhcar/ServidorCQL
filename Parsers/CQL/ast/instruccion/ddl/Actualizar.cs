@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class Actualizar : Instruccion
+    public class Actualizar : Instruccion
     {
         public Actualizar(string id, LinkedList<Instruccion> asignaciones, int linea, int columna) : base(linea, columna)
         {

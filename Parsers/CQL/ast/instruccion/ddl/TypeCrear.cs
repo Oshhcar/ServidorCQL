@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
-    class TypeCrear : Instruccion
+    public class TypeCrear : Instruccion
     {
         public TypeCrear(string id, bool ifNotExist, LinkedList<Simbolo> atributos, int linea, int columna) : base(linea, columna)
         {

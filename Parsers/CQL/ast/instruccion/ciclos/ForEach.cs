@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ciclos
 {
-    class ForEach : Instruccion
+    public class ForEach : Instruccion
     {
         public ForEach(LinkedList<Identificador> parametro, string id, Bloque bloque, int linea, int columna) : base(linea, columna)
         {

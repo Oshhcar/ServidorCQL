@@ -11,7 +11,7 @@ using Type = GramaticasCQL.Parsers.CQL.ast.entorno.Type;
 
 namespace GramaticasCQL.Parsers.CQL.ast.expresion
 {
-    class Agregacion : Expresion
+    public class Agregacion : Expresion
     {
         public Agregacion(Aggregation funcion, Seleccionar select, int linea, int columna) : base(linea, columna)
         {

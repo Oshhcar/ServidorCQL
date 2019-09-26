@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast
 {
-    class ASTCQL
+    public class ASTCQL
     {
         public ASTCQL(LinkedList<NodoASTCQL> sentencias, string cadena)
         {

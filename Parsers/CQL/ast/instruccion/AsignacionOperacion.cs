@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class AsignacionOperacion : Instruccion
+    public class AsignacionOperacion : Instruccion
     {
         public AsignacionOperacion(Expresion target, Operador op, Expresion expr, int linea, int columna) : base(linea, columna)
         {

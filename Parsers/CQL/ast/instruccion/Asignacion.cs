@@ -8,7 +8,7 @@ using GramaticasCQL.Parsers.CQL.ast.expresion;
 
 namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 {
-    class Asignacion : Instruccion
+    public class Asignacion : Instruccion
     {
         public Asignacion(Expresion target, Expresion expr, int linea, int columna) : base(linea, columna)
         {
