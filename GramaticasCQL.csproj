@@ -171,7 +171,7 @@
     <Compile Include="Parsers\CHISON\ast\ASTCHISON.cs" />
     <Compile Include="Parsers\CHISON\ast\Atributo.cs" />
     <Compile Include="Parsers\CHISON\ast\BloqueChison.cs" />
-    <Compile Include="Parsers\CHISON\ast\DATABASES.cs" />
+    <Compile Include="Parsers\CHISON\ast\Databases.cs" />
     <Compile Include="Parsers\CHISON\ast\Lista.cs" />
     <Compile Include="Parsers\CHISON\ast\Users.cs" />
     <Compile Include="Parsers\CHISON\GramaticaCHISON.cs" />

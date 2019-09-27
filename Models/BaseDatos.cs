@@ -14,16 +14,17 @@ namespace GramaticasCQL.Models
         public static string Entrada = "";
         public static LinkedList<Salida> Log = new LinkedList<Salida>();
         public static LinkedList<Error> Errores = new LinkedList<Error>();
-        public static MasterBD master = new MasterBD();
+        public static MasterBD Master = new MasterBD();
+        public static HttpServerUtility PathDatos;
 
         public static void Ejecutar()
         {
             Log.Clear();
             Errores.Clear();
 
-            if (master.GetUsuario("admin") == null)
+            if (Master.GetUsuario("admin") == null)
             {
-                master.AddUsuario("admin", "admin");
+                Master.AddUsuario("admin", "admin");
             }
 
             AnalizadorCQL analizador = new AnalizadorCQL();
@@ -34,7 +35,7 @@ namespace GramaticasCQL.Models
 
                 if (ast != null)
                 {
-                    ast.Ejecutar(Log, Errores, master);
+                    ast.Ejecutar(Log, Errores, Master);
                 }
             }
         }

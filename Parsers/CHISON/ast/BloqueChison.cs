@@ -1,4 +1,5 @@
-﻿using GramaticasCQL.Parsers.CQL;
+﻿using GramaticasCQL.Models;
+using GramaticasCQL.Parsers.CQL;
 using GramaticasCQL.Parsers.CQL.ast;
 using GramaticasCQL.Parsers.CQL.ast.entorno;
 using GramaticasCQL.Parsers.CQL.ast.expresion;
@@ -1025,7 +1026,9 @@ namespace GramaticasCQL.Parsers.CHISON.ast
 
                 if (val.Tipo.IsVoid())
                 {
-                    string archivo = val.GetValor(e, log, errores).ToString().Replace("$", "").Replace("{", "").Replace("}", "").Trim();
+                    string nombre = val.GetValor(e, log, errores).ToString().Replace("$", "").Replace("{", "").Replace("}", "").Trim();
+
+                    string archivo = BaseDatos.PathDatos.MapPath("/Files/" + nombre);
 
                     StreamReader reader = null;
                     try

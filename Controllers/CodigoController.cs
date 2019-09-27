@@ -20,6 +20,7 @@ namespace GramaticasCQL.Controllers
         {
             if (ModelState.IsValid)
             {
+                BaseDatos.PathDatos = HttpContext.Current.Server;//.MapPath("/Files/baseDatos.chison");
                 BaseDatos.Entrada = codigo.Contenido;
 
                 ThreadStart thread = new ThreadStart(BaseDatos.Ejecutar);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GramaticasCQL.Models;
 using GramaticasCQL.Parsers.CHISON;
 using GramaticasCQL.Parsers.CHISON.ast;
 using GramaticasCQL.Parsers.CQL.ast.entorno;
@@ -16,7 +17,8 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
         public override object Ejecutar(Entorno e, bool funcion, bool ciclo, bool sw, bool tc, LinkedList<Salida> log, LinkedList<Error> errores)
         {
-            string archivo = "baseDatos.chison";
+            //string archivo = "baseDatos.chison";
+            string archivo = BaseDatos.PathDatos.MapPath("/Files/baseDatos.chison");
 
             StreamReader reader = null;
             try
@@ -41,6 +43,7 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
                                     e.MasterRollback = new MasterBD();
                                     e.MasterRollback.AddUsuario("admin", "admin");
                                     ast.Ejecutar(e, log, errores);
+                                    BaseDatos.Master = e.MasterRollback;
                                     e.Master = e.MasterRollback;
                                 }
                             }

@@ -27,7 +27,7 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion
             if (valorExpr != null)
                 log.AddLast(new Salida(1, valorExpr.ToString()));
 
-            e.Master.Recorrer();
+            //e.Master.Recorrer();
             //e.Recorrer();
             return null;
         }
