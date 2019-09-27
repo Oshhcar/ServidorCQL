@@ -42,9 +42,11 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
                                 {
                                     e.MasterRollback = new MasterBD();
                                     e.MasterRollback.AddUsuario("admin", "admin");
+                                    //e.MasterRollback.UsuarioActual = e.Master.UsuarioActual;
                                     ast.Ejecutar(e, log, errores);
                                     BaseDatos.Master = e.MasterRollback;
                                     e.Master = e.MasterRollback;
+                                    e.Master.Actual = null;
                                 }
                             }
                         }

@@ -24,8 +24,10 @@ namespace GramaticasCQL.Controllers
                 BaseDatos.Entrada = codigo.Contenido;
 
                 ThreadStart thread = new ThreadStart(BaseDatos.Ejecutar);
-                Thread t = new Thread(thread, 1000000000);
-                t.IsBackground = false;
+                Thread t = new Thread(thread, 1000000000)
+                {
+                    IsBackground = false
+                };
                 t.Start();
 
                 while (t.IsAlive)
@@ -33,9 +35,22 @@ namespace GramaticasCQL.Controllers
 
                 string salida = "";
 
+                foreach (Salida s in BaseDatos.Respuesta)
+                {
+                    salida += s.Contenido +"\n";
+                }
+
                 foreach (Salida s in BaseDatos.Log)
                 {
-                    salida += s.Contenido;
+                    if (s.Tipo == 1)
+                        salida += "[+MESSAGE]\n\t" + s.Contenido + "\n[-MESSAGE]\n";
+                    else
+                        salida += s.Contenido + "\n";
+                }
+
+                foreach (Error e in BaseDatos.Errores)
+                {
+                    salida += e.Descripcion + " Linea:"+e.Linea + "\n";
                 }
 
                 return Ok(salida);

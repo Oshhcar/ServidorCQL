@@ -262,6 +262,12 @@
     <Compile Include="Parsers\CQL\GramaticaCQL.cs" />
     <Compile Include="Parsers\Error.cs" />
     <Compile Include="Parsers\LUP\AnalizadorLUP.cs" />
+    <Compile Include="Parsers\LUP\ast\ASTLUP.cs" />
+    <Compile Include="Parsers\LUP\ast\NodoLUP.cs" />
+    <Compile Include="Parsers\LUP\ast\sentencia\Login.cs" />
+    <Compile Include="Parsers\LUP\ast\sentencia\Logout.cs" />
+    <Compile Include="Parsers\LUP\ast\sentencia\Query.cs" />
+    <Compile Include="Parsers\LUP\ast\sentencia\Sentencia.cs" />
     <Compile Include="Parsers\LUP\GramaticaLUP.cs" />
     <Compile Include="Parsers\Salida.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

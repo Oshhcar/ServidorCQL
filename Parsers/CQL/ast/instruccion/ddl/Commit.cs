@@ -12,12 +12,17 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 {
     public class Commit : Instruccion
     {
-        public Commit(int linea, int columna) : base(linea, columna) { }
+        public Commit(int linea, int columna) : base(linea, columna)
+        {
+            Nombre = "baseDatos.chison";
+        }
+
+        public string Nombre { get; set; }
 
         public override object Ejecutar(Entorno e, bool funcion, bool ciclo, bool sw, bool tc, LinkedList<Salida> log, LinkedList<Error> errores)
         {
             //string archivo = "baseDatos.chison";
-            string archivo = BaseDatos.PathDatos.MapPath("/Files/baseDatos.chison");
+            string archivo = BaseDatos.PathDatos.MapPath("/Files/"+Nombre);
             
             StreamWriter writer = null;
 
@@ -120,19 +125,22 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
                             if (proc.Retorno != null)
                             {
-                                if (parametro)
-                                    contenido += ",";
-
-                                foreach (Identificador par in proc.Retorno)
+                                if (proc.Retorno.Count() > 0)
                                 {
-                                    contenido += "\n\t    <\n";
-                                    contenido += "\t    \"NAME\"= \"" + par.Id + "\",\n";
-                                    contenido += "\t    \"TYPE\"= \"" + par.Tipo.ToString() + "\",\n";
-                                    contenido += "\t    \"AS\"= OUT\n";
-                                    contenido += "\t    >";
-
-                                    if (!proc.Retorno.Last.Value.Equals(par))
+                                    if (parametro)
                                         contenido += ",";
+
+                                    foreach (Identificador par in proc.Retorno)
+                                    {
+                                        contenido += "\n\t    <\n";
+                                        contenido += "\t    \"NAME\"= \"" + par.Id + "\",\n";
+                                        contenido += "\t    \"TYPE\"= \"" + par.Tipo.ToString() + "\",\n";
+                                        contenido += "\t    \"AS\"= OUT\n";
+                                        contenido += "\t    >";
+
+                                        if (!proc.Retorno.Last.Value.Equals(par))
+                                            contenido += ",";
+                                    }
                                 }
                             }
 
