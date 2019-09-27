@@ -90,319 +90,329 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
             BD actual = e.Master.Actual;
             if (actual != null)
             {
-                Simbolo sim = actual.GetTabla(Id);
-
-                if (sim != null)
+                if (e.Master.UsuarioActual != null)
                 {
-                    Tabla tabla = (Tabla)sim.Valor;
-
-                    LinkedList<Entorno> datos = new LinkedList<Entorno>();
-
-                    if (Order != null)
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
                     {
-                        if (tabla.Datos.Count() > 1)
+                        Simbolo sim = actual.GetTabla(Id);
+
+                        if (sim != null)
                         {
-                            foreach (Entorno ent in tabla.Datos)
+                            Tabla tabla = (Tabla)sim.Valor;
+
+                            LinkedList<Entorno> datos = new LinkedList<Entorno>();
+
+                            if (Order != null)
                             {
+                                if (tabla.Datos.Count() > 1)
+                                {
+                                    foreach (Entorno ent in tabla.Datos)
+                                    {
+                                        Entorno entActual = new Entorno(null, new LinkedList<Simbolo>());
+
+                                        foreach (Simbolo simActual in ent.Simbolos)
+                                        {
+                                            entActual.Add(new Simbolo(simActual.Tipo, simActual.Rol, simActual.Id, simActual.Valor));
+                                        }
+
+                                        datos.AddLast(entActual);
+                                    }
+
+                                    e.Master.EntornoActual = tabla.Datos.ElementAt(0);
+
+                                    if (Order.Count() >= 1)
+                                    {
+                                        for (int j = Order.Count() - 1; j >= 0; j--)
+                                        {
+                                            Identificador ident = Order.ElementAt(j);
+
+                                            LinkedList<Entorno> tmp = new LinkedList<Entorno>();
+                                            IEnumerable<Entorno> ordered;
+
+                                            object identValor = ident.GetValor(e, log, errores);
+
+                                            if (identValor != null)
+                                            {
+
+                                                if (identValor is Throw)
+                                                    return identValor;
+
+                                                if (ident.Tipo.IsString() || ident.Tipo.IsDate() || ident.Tipo.IsTime())
+                                                    ordered = datos.OrderBy(p => p.GetCualquiera(ident.GetId()).Valor.ToString()).AsEnumerable();
+                                                else if (ident.Tipo.IsInt())
+                                                    ordered = datos.OrderBy(p => (int)p.GetCualquiera(ident.GetId()).Valor).AsEnumerable();
+                                                else if (ident.Tipo.IsDouble())
+                                                    ordered = datos.OrderBy(p => (double)p.GetCualquiera(ident.GetId()).Valor).AsEnumerable();
+                                                else
+                                                {
+                                                    errores.AddLast(new Error("Semántico", "Solo se puede usar la cláusula Order By sobre datos primitivos.", Linea, Columna));
+                                                    return null;
+                                                }
+
+                                                if (ident.IsASC)
+                                                {
+                                                    foreach (Entorno eTmp in ordered)
+                                                    {
+                                                        tmp.AddLast(eTmp);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    for (int i = ordered.Count() - 1; i >= 0; i--)
+                                                    {
+                                                        tmp.AddLast(ordered.ElementAt(i));
+                                                    }
+                                                }
+                                                datos = tmp;
+                                            }
+                                            else
+                                                return null;
+                                        }
+                                    }
+                                    /*
+                                    else if (Order.Count() >= 2)
+                                    {
+                                        Identificador ident = Order.ElementAt(0);
+                                        Identificador ident2 = Order.ElementAt(1);
+
+                                        LinkedList<Entorno> tmp = new LinkedList<Entorno>();
+                                        IEnumerable<Entorno> ordered;
+
+                                        object identValor = ident.GetValor(e, log, errores);
+                                        object identValor2 = ident2.GetValor(e, log, errores);
+
+                                        if (identValor != null && identValor2 != null)
+                                        {
+                                            if (ident.Tipo.IsString() || ident.Tipo.IsDate() || ident.Tipo.IsTime() || ident.Tipo.IsInt() || ident.Tipo.IsDouble())
+                                                if(ident2.Tipo.IsString() || ident2.Tipo.IsDate() || ident2.Tipo.IsTime() || ident2.Tipo.IsInt() || ident2.Tipo.IsDouble())
+                                                    ordered = datos.OrderBy(p => Tuple.Create(p.GetCualquiera(ident.GetId()).Valor.ToString(), p.GetCualquiera(ident2.GetId()).Valor.ToString()), new ComparaTupla()).AsEnumerable();
+                                                else
+                                                {
+                                                    errores.AddLast(new Error("Semántico", "Solo se puede usar la cláusula Order By sobre datos primitivos.", Linea, Columna));
+                                                    return null;
+                                                }
+                                            else
+                                            {
+                                                errores.AddLast(new Error("Semántico", "Solo se puede usar la cláusula Order By sobre datos primitivos.", Linea, Columna));
+                                                return null;
+                                            }
+
+                                            if (ident.IsASC)
+                                            {
+                                                foreach (Entorno eTmp in ordered)
+                                                {
+                                                    tmp.AddLast(eTmp);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for (int i = ordered.Count() - 1; i >= 0; i--)
+                                                {
+                                                    tmp.AddLast(ordered.ElementAt(i));
+                                                }
+                                            }
+                                            datos = tmp;
+                                        }
+                                        else
+                                            return null;
+                                    }
+                                    */
+                                }
+                                else
+                                {
+                                    datos = tabla.Datos;
+                                }
+                            }
+                            else
+                            {
+                                datos = tabla.Datos;
+                            }
+
+                            LinkedList<Entorno> data = new LinkedList<Entorno>();
+
+                            foreach (Entorno ent in datos)
+                            {
+                                e.Master.EntornoActual = ent;
                                 Entorno entActual = new Entorno(null, new LinkedList<Simbolo>());
 
-                                foreach (Simbolo simActual in ent.Simbolos)
+                                if (Where != null)
                                 {
-                                    entActual.Add(new Simbolo(simActual.Tipo, simActual.Rol, simActual.Id, simActual.Valor));
-                                }
-
-                                datos.AddLast(entActual);
-                            }
-
-                            e.Master.EntornoActual = tabla.Datos.ElementAt(0);
-
-                            if (Order.Count() >= 1)
-                            {
-                                for (int j = Order.Count() - 1; j >= 0; j--)
-                                {
-                                    Identificador ident = Order.ElementAt(j);
-
-                                    LinkedList<Entorno> tmp = new LinkedList<Entorno>();
-                                    IEnumerable<Entorno> ordered;
-
-                                    object identValor = ident.GetValor(e, log, errores);
-
-                                    if (identValor != null)
+                                    object valWhere = Where.GetValor(e, log, errores);
+                                    if (valWhere != null)
                                     {
+                                        if (valWhere is Throw)
+                                            return valWhere;
 
-                                        if (identValor is Throw)
-                                            return identValor;
-
-                                        if (ident.Tipo.IsString() || ident.Tipo.IsDate() || ident.Tipo.IsTime())
-                                            ordered = datos.OrderBy(p => p.GetCualquiera(ident.GetId()).Valor.ToString()).AsEnumerable();
-                                        else if (ident.Tipo.IsInt())
-                                            ordered = datos.OrderBy(p => (int)p.GetCualquiera(ident.GetId()).Valor).AsEnumerable();
-                                        else if (ident.Tipo.IsDouble())
-                                            ordered = datos.OrderBy(p => (double)p.GetCualquiera(ident.GetId()).Valor).AsEnumerable();
+                                        if (Where.Tipo.IsBoolean())
+                                        {
+                                            if (!(bool)valWhere)
+                                                continue;
+                                        }
                                         else
                                         {
-                                            errores.AddLast(new Error("Semántico", "Solo se puede usar la cláusula Order By sobre datos primitivos.", Linea, Columna));
+                                            errores.AddLast(new Error("Semántico", "Cláusula Where debe ser booleana.", Linea, Columna));
                                             return null;
                                         }
-
-                                        if (ident.IsASC)
-                                        {
-                                            foreach (Entorno eTmp in ordered)
-                                            {
-                                                tmp.AddLast(eTmp);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (int i = ordered.Count() - 1; i >= 0; i--)
-                                            {
-                                                tmp.AddLast(ordered.ElementAt(i));
-                                            }
-                                        }
-                                        datos = tmp;
                                     }
                                     else
                                         return null;
                                 }
-                            }
-                            /*
-                            else if (Order.Count() >= 2)
-                            {
-                                Identificador ident = Order.ElementAt(0);
-                                Identificador ident2 = Order.ElementAt(1);
 
-                                LinkedList<Entorno> tmp = new LinkedList<Entorno>();
-                                IEnumerable<Entorno> ordered;
-
-                                object identValor = ident.GetValor(e, log, errores);
-                                object identValor2 = ident2.GetValor(e, log, errores);
-
-                                if (identValor != null && identValor2 != null)
+                                if (Columnas != null)
                                 {
-                                    if (ident.Tipo.IsString() || ident.Tipo.IsDate() || ident.Tipo.IsTime() || ident.Tipo.IsInt() || ident.Tipo.IsDouble())
-                                        if(ident2.Tipo.IsString() || ident2.Tipo.IsDate() || ident2.Tipo.IsTime() || ident2.Tipo.IsInt() || ident2.Tipo.IsDouble())
-                                            ordered = datos.OrderBy(p => Tuple.Create(p.GetCualquiera(ident.GetId()).Valor.ToString(), p.GetCualquiera(ident2.GetId()).Valor.ToString()), new ComparaTupla()).AsEnumerable();
+                                    int numCol = 1;
+
+                                    foreach (Expresion colExp in Columnas)
+                                    {
+                                        Simbolo simActual = new Simbolo();
+
+                                        object valColExp = colExp.GetValor(e, log, errores);
+
+                                        if (valColExp != null)
+                                        {
+                                            if (valColExp is Throw)
+                                                return valColExp;
+
+                                            simActual.Tipo = colExp.Tipo;
+                                            simActual.Rol = Rol.COLUMNA;
+
+                                            if (colExp is Identificador iden)
+                                            {
+                                                simActual.Id = iden.GetId().ToLower();
+                                            }
+                                            else
+                                            {
+                                                simActual.Id = "columna" + numCol++;
+                                            }
+                                            simActual.Valor = valColExp;
+                                        }
                                         else
-                                        {
-                                            errores.AddLast(new Error("Semántico", "Solo se puede usar la cláusula Order By sobre datos primitivos.", Linea, Columna));
                                             return null;
-                                        }
-                                    else
-                                    {
-                                        errores.AddLast(new Error("Semántico", "Solo se puede usar la cláusula Order By sobre datos primitivos.", Linea, Columna));
-                                        return null;
+
+                                        entActual.Add(simActual);
                                     }
-
-                                    if (ident.IsASC)
-                                    {
-                                        foreach (Entorno eTmp in ordered)
-                                        {
-                                            tmp.AddLast(eTmp);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        for (int i = ordered.Count() - 1; i >= 0; i--)
-                                        {
-                                            tmp.AddLast(ordered.ElementAt(i));
-                                        }
-                                    }
-                                    datos = tmp;
-                                }
-                                else
-                                    return null;
-                            }
-                            */
-                        }
-                        else
-                        {
-                            datos = tabla.Datos;
-                        }
-                    }
-                    else
-                    {
-                        datos = tabla.Datos;
-                    }
-
-                    LinkedList<Entorno> data = new LinkedList<Entorno>();
-
-                    foreach (Entorno ent in datos)
-                    {
-                        e.Master.EntornoActual = ent;
-                        Entorno entActual = new Entorno(null, new LinkedList<Simbolo>());
-
-                        if (Where != null)
-                        {
-                            object valWhere = Where.GetValor(e, log, errores);
-                            if (valWhere != null)
-                            {
-                                if (valWhere is Throw)
-                                    return valWhere;
-
-                                if (Where.Tipo.IsBoolean())
-                                {
-                                    if (!(bool)valWhere)
-                                        continue;
                                 }
                                 else
                                 {
-                                    errores.AddLast(new Error("Semántico", "Cláusula Where debe ser booleana.", Linea, Columna));
-                                    return null;
-                                }
-                            }
-                            else
-                                return null;
-                        }
-
-                        if (Columnas != null)
-                        {
-                            int numCol = 1;
-
-                            foreach (Expresion colExp in Columnas)
-                            {
-                                Simbolo simActual = new Simbolo();
-
-                                object valColExp = colExp.GetValor(e, log, errores);
-
-                                if (valColExp != null)
-                                {
-                                    if (valColExp is Throw)
-                                        return valColExp;
-
-                                    simActual.Tipo = colExp.Tipo;
-                                    simActual.Rol = Rol.COLUMNA;
-
-                                    if (colExp is Identificador iden)
+                                    foreach (Simbolo col in ent.Simbolos)
                                     {
-                                        simActual.Id = iden.GetId().ToLower();
+                                        entActual.Add(new Simbolo(col.Tipo, col.Rol, col.Id, col.Valor));
                                     }
-                                    else
-                                    {
-                                        simActual.Id = "columna" + numCol++;
-                                    }
-                                    simActual.Valor = valColExp;
                                 }
-                                else
-                                    return null;
 
-                                entActual.Add(simActual);
+                                data.AddLast(entActual);
                             }
-                        }
-                        else
-                        {
-                            foreach (Simbolo col in ent.Simbolos)
+
+                            e.Master.EntornoActual = null;
+
+                            int limite;
+
+                            if (Limit != null)
                             {
-                                entActual.Add(new Simbolo(col.Tipo, col.Rol, col.Id, col.Valor));
-                            }
-                        }
-
-                        data.AddLast(entActual);
-                    }
-
-                    e.Master.EntornoActual = null;
-
-                    int limite;
-
-                    if (Limit != null)
-                    {
-                        object valLimit = Limit.GetValor(e, log, errores);
-                        if (valLimit != null)
-                        {
-                            if (valLimit is Throw)
-                                return valLimit;
-
-                            if (Limit.Tipo.IsInt())
-                            {
-                                limite = (int)valLimit-1;
-
-                                if((int)valLimit < 0)
-                                    errores.AddLast(new Error("Semántico", "El Límite debe ser entero positivo.", Linea, Columna));
-                            }
-                            else
-                            {
-                                Casteo cast = new Casteo(new Tipo(entorno.Type.INT), new Literal(Limit.Tipo, valLimit, 0, 0), 0, 0)
-                                {
-                                    Mostrar = false
-                                };
-                                valLimit = cast.GetValor(e, log, errores);
-
+                                object valLimit = Limit.GetValor(e, log, errores);
                                 if (valLimit != null)
                                 {
                                     if (valLimit is Throw)
                                         return valLimit;
 
-                                    limite = (int)valLimit-1;
-                                    if((int)valLimit < 0)
-                                        errores.AddLast(new Error("Semántico", "El Límite debe ser entero positivo.", Linea, Columna));
+                                    if (Limit.Tipo.IsInt())
+                                    {
+                                        limite = (int)valLimit - 1;
+
+                                        if ((int)valLimit < 0)
+                                            errores.AddLast(new Error("Semántico", "El Límite debe ser entero positivo.", Linea, Columna));
+                                    }
+                                    else
+                                    {
+                                        Casteo cast = new Casteo(new Tipo(entorno.Type.INT), new Literal(Limit.Tipo, valLimit, 0, 0), 0, 0)
+                                        {
+                                            Mostrar = false
+                                        };
+                                        valLimit = cast.GetValor(e, log, errores);
+
+                                        if (valLimit != null)
+                                        {
+                                            if (valLimit is Throw)
+                                                return valLimit;
+
+                                            limite = (int)valLimit - 1;
+                                            if ((int)valLimit < 0)
+                                                errores.AddLast(new Error("Semántico", "El Límite debe ser entero positivo.", Linea, Columna));
+                                        }
+                                        else
+                                        {
+                                            errores.AddLast(new Error("Semántico", "El Límite debe ser de tipo Entero.", Linea, Columna));
+                                            return null;
+                                        }
+                                    }
+                                }
+                                else
+                                    return null;
+                            }
+                            else
+                                limite = data.Count() - 1;
+
+                            limite = limite > data.Count() - 1 ? data.Count() - 1 : limite;
+
+                            if (Mostrar)
+                            {
+                                string salida;
+
+                                if (data.Count() >= 1)
+                                {
+                                    salida = "<table> \n";
+
+                                    salida += "<tr> \n";
+
+                                    foreach (Simbolo col in data.ElementAt(0).Simbolos)
+                                    {
+                                        salida += "\t<th>" + col.Id + "</th>\n";
+                                    }
+
+                                    salida += "</tr>\n";
+
+                                    for (int i = 0; i <= limite; i++)
+                                    {
+                                        Entorno ent = data.ElementAt(i);
+                                        salida += "<tr>\n";
+
+                                        foreach (Simbolo col in ent.Simbolos)
+                                        {
+                                            salida += "\t<td>" + col.Valor.ToString() + "</td>\n";
+                                        }
+
+                                        salida += "</tr>\n";
+                                    }
+
+                                    salida += "</table>\n\n\n";
+
                                 }
                                 else
                                 {
-                                    errores.AddLast(new Error("Semántico", "El Límite debe ser de tipo Entero.", Linea, Columna));
-                                    return null;
-                                }
-                            }
-                        }
-                        else
-                            return null;
-                    }
-                    else
-                        limite = data.Count()-1;
-
-                    limite = limite > data.Count() - 1 ? data.Count() - 1 : limite;
-
-                    if (Mostrar)
-                    {
-                        string salida;
-
-                        if (data.Count() >= 1)
-                        {
-                            salida = "<table> \n";
-
-                            salida += "<tr> \n";
-
-                            foreach (Simbolo col in data.ElementAt(0).Simbolos)
-                            {
-                                salida += "\t<th>" + col.Id + "</th>\n";
-                            }
-
-                            salida += "</tr>\n";
-
-                            for (int i = 0; i <= limite; i++)
-                            {
-                                Entorno ent = data.ElementAt(i);
-                                salida += "<tr>\n";
-
-                                foreach (Simbolo col in ent.Simbolos)
-                                {
-                                    salida += "\t<td>" + col.Valor.ToString() + "</td>\n";
+                                    salida = "No hay datos en la consulta.\n\n";
                                 }
 
-                                salida += "</tr>\n";
+                                log.AddLast(new Salida(2, salida));
+                                return null;
                             }
-
-                            salida += "</table>\n\n\n";
-
+                            else
+                                return data;
                         }
                         else
-                        {
-                            salida = "No hay datos en la consulta.\n\n";
-                        }
-
-                        log.AddLast(new Salida(2, salida));
-                        return null;
+                            return new Throw("TableDontExists", Linea, Columna);
+                        //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
                     }
                     else
-                        return data;
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
                 else
-                    return new Throw("TableDontExists", Linea, Columna);
-                    //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);
                 //errores.AddLast(new Error("Semántico", "No se ha seleccionado una base de datos, no se pudo Actualizar.", Linea, Columna));
 
-            //return null;
+            return null;
         }
 
         public class ComparaTupla : IComparer<Tuple<string, string>>

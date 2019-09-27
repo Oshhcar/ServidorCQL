@@ -79,8 +79,12 @@ namespace GramaticasCQL.Parsers.LUP
                 case "DATA":
                     linea = hijos[3].Token.Text.Length - 3;
                     if (linea >= 0)
-                        return hijos[3].Token.Text.Substring(1, linea).ToLower().Trim();
+                        return hijos[3].Token.Text.Substring(1, linea).ToLower();
                     return "";
+                case "STRUC":
+                    linea = hijos[0].Token.Location.Line + 1;
+                    columna = hijos[0].Token.Location.Column + 1;
+                    return new Struc((string)GenerarArbol(hijos[4]), linea, columna);
             }
 
             return null;

@@ -24,12 +24,22 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
             if (actual != null)
             {
-                if (!actual.DropTabla(Id))
+                if (e.Master.UsuarioActual != null)
                 {
-                    if (!IfNotExist)
-                        return new Throw("TableDontExists", Linea, Columna);
-                        //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
+                    {
+                        if (!actual.DropTabla(Id))
+                        {
+                            if (!IfNotExist)
+                                return new Throw("TableDontExists", Linea, Columna);
+                            //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                        }
+                    }
+                    else
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
+                else
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);

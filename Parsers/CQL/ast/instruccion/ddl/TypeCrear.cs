@@ -26,16 +26,26 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
             BD actual = e.Master.Actual;
             if (actual != null)
             {
-                if (actual.GetUserType(Id) == null)
+                if (e.Master.UsuarioActual != null)
                 {
-                    actual.Add(new Simbolo(Rol.USERTYPE, Id.ToLower(), new Entorno(null, Atributos)));
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
+                    {
+                        if (actual.GetUserType(Id) == null)
+                        {
+                            actual.Add(new Simbolo(Rol.USERTYPE, Id.ToLower(), new Entorno(null, Atributos)));
+                        }
+                        else
+                        {
+                            if (!IfNotExist)
+                                return new Throw("TypeAlreadyExists", Linea, Columna);
+                            //errores.AddLast(new Error("Semántico", "Ya existe un User Type con el id: " + Id + " en la base de datos.", Linea, Columna));
+                        }
+                    }
+                    else
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
                 else
-                {
-                    if (!IfNotExist)
-                        return new Throw("TypeAlreadyExists", Linea, Columna);
-                        //errores.AddLast(new Error("Semántico", "Ya existe un User Type con el id: " + Id + " en la base de datos.", Linea, Columna));
-                }
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);

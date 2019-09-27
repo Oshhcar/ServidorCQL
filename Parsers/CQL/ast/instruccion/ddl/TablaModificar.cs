@@ -31,45 +31,55 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
             if (actual != null)
             {
-                Simbolo sim = actual.GetTabla(Id);
-
-                if (sim != null)
+                if (e.Master.UsuarioActual != null)
                 {
-                    Tabla tabla = (Tabla)sim.Valor;
-
-                    if (Simbolos != null)
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
                     {
-                        foreach (Simbolo columna in Simbolos)
-                        {
-                            columna.Rol = Rol.COLUMNA;
+                        Simbolo sim = actual.GetTabla(Id);
 
-                            if (tabla.Cabecera.GetCualquiera(columna.Id) != null)
+                        if (sim != null)
+                        {
+                            Tabla tabla = (Tabla)sim.Valor;
+
+                            if (Simbolos != null)
                             {
-                                errores.AddLast(new Error("Semántico", "Ya existe una columna con el id: " + columna.Id + " en la Tabla.", Linea, Columna));
-                                continue;
+                                foreach (Simbolo columna in Simbolos)
+                                {
+                                    columna.Rol = Rol.COLUMNA;
+
+                                    if (tabla.Cabecera.GetCualquiera(columna.Id) != null)
+                                    {
+                                        errores.AddLast(new Error("Semántico", "Ya existe una columna con el id: " + columna.Id + " en la Tabla.", Linea, Columna));
+                                        continue;
+                                    }
+                                    tabla.Add(columna);
+                                }
                             }
-                            tabla.Add(columna);
+                            else
+                            {
+                                foreach (string columna in Columnas)
+                                {
+                                    int drop = tabla.Drop(columna);
+
+                                    if (drop != 1)
+                                    {
+                                        if (drop == 2)
+                                            errores.AddLast(new Error("Semántico", "No se puede eliminar la columna con el id: " + columna + " porque es llave primaria.", Linea, Columna));
+                                        else
+                                            errores.AddLast(new Error("Semántico", "No existe una columna con el id: " + columna + " en la Tabla.", Linea, Columna));
+                                    }
+                                }
+                            }
                         }
+                        else
+                            return new Throw("TableDontExists", Linea, Columna);
+                        //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
                     }
                     else
-                    {
-                        foreach (string columna in Columnas)
-                        {
-                            int drop = tabla.Drop(columna);
-
-                            if (drop != 1)
-                            {
-                                if(drop == 2)
-                                    errores.AddLast(new Error("Semántico", "No se puede eliminar la columna con el id: " + columna + " porque es llave primaria.", Linea, Columna));
-                                else
-                                    errores.AddLast(new Error("Semántico", "No existe una columna con el id: " + columna + " en la Tabla.", Linea, Columna));
-                            }
-                        }
-                    }
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
                 else
-                    return new Throw("TableDontExists", Linea, Columna);
-                    //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);

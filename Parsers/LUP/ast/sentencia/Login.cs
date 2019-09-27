@@ -21,11 +21,11 @@ namespace GramaticasCQL.Parsers.LUP.ast.sentencia
         {
             if (!Nombre.Equals("") && !Pass.Equals(""))
             {
-                Usuario user = master.GetUsuario(Nombre);
+                Usuario user = master.GetUsuario(Nombre.Trim());
 
                 if (user != null)
                 {
-                    if (user.Password.Equals(Pass))
+                    if (user.Password.Equals(Pass.Trim()))
                     {
                         respuesta.AddLast(new Salida(1, "[+LOGIN]\n\t[SUCCESS]\n[-LOGIN]"));
                         return null;

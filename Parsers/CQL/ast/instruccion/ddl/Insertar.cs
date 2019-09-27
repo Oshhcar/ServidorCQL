@@ -34,190 +34,200 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
             if (actual != null)
             {
-                Simbolo sim = actual.GetTabla(Id);
-
-                if (sim != null)
+                if (e.Master.UsuarioActual != null)
                 {
-                    Tabla tabla = (Tabla)sim.Valor;
-
-                    if (Columnas != null)
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
                     {
-                        if (Columnas.Count() == Valores.Count())
+                        Simbolo sim = actual.GetTabla(Id);
+
+                        if (sim != null)
                         {
-                            Entorno datos = tabla.GetNuevaFila();
-                            LinkedList<Simbolo> primary = new LinkedList<Simbolo>();
+                            Tabla tabla = (Tabla)sim.Valor;
 
-                            for (int i = 0; i < Columnas.Count(); i++)
+                            if (Columnas != null)
                             {
-                                Expresion valor = Valores.ElementAt(i);
-                                object valValor = valor.GetValor(e, log, errores);
-                                if (valValor != null)
+                                if (Columnas.Count() == Valores.Count())
                                 {
-                                    if (valValor is Throw)
-                                        return valValor;
+                                    Entorno datos = tabla.GetNuevaFila();
+                                    LinkedList<Simbolo> primary = new LinkedList<Simbolo>();
 
-                                    string col = Columnas.ElementAt(i);
-                                    Simbolo dato = datos.GetCualquiera(col);
-                                    if (dato != null)
+                                    for (int i = 0; i < Columnas.Count(); i++)
                                     {
-                                        if (dato.Tipo.IsCounter())
+                                        Expresion valor = Valores.ElementAt(i);
+                                        object valValor = valor.GetValor(e, log, errores);
+                                        if (valValor != null)
                                         {
-                                            return new Throw("CounterTypeException", Linea, Columna);
-                                            //dato.Valor = tabla.Contador;
-                                            //continue;
+                                            if (valValor is Throw)
+                                                return valValor;
+
+                                            string col = Columnas.ElementAt(i);
+                                            Simbolo dato = datos.GetCualquiera(col);
+                                            if (dato != null)
+                                            {
+                                                if (dato.Tipo.IsCounter())
+                                                {
+                                                    return new Throw("CounterTypeException", Linea, Columna);
+                                                    //dato.Valor = tabla.Contador;
+                                                    //continue;
+                                                }
+
+                                                if (dato.Tipo.Equals(valor.Tipo))
+                                                {
+                                                    dato.Valor = valValor;
+
+                                                    if (dato.Rol == Rol.PRIMARY)
+                                                    {
+                                                        if (valValor is Null)
+                                                        {
+                                                            errores.AddLast(new Error("Semántico", "Una llave primaria no puede ser Null.", Linea, Columna));
+                                                            return null;
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    Casteo cast = new Casteo(dato.Tipo, new Literal(valor.Tipo, valValor, 0, 0), 0, 0)
+                                                    {
+                                                        Mostrar = false
+                                                    };
+                                                    valValor = cast.GetValor(e, log, errores);
+
+                                                    if (valValor != null)
+                                                    {
+                                                        if (valValor is Throw)
+                                                            return valValor;
+
+                                                        dato.Valor = valValor;
+                                                        continue;
+                                                    }
+
+                                                    return new Throw("ValuesException", Linea, Columna);
+                                                    //errores.AddLast(new Error("Semántico", "El tipo de la expresión no corresponde al tipo en la columna: " + sim.Id + ".", Linea, Columna));
+                                                    //return null;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                errores.AddLast(new Error("Semántico", "No hay un campo con el id: " + col + " en la Tabla.", Linea, Columna));
+                                                return null;
+                                            }
                                         }
+                                        else
+                                            return null;
 
-                                        if (dato.Tipo.Equals(valor.Tipo))
+                                    }
+
+                                    foreach (Simbolo col in datos.Simbolos)
+                                    {
+                                        if (col.Tipo.IsCounter())
+                                            col.Valor = tabla.Contador;
+
+                                        if (col.Rol == Rol.PRIMARY)
                                         {
-                                            dato.Valor = valValor;
+                                            if (col.Valor is Null)
+                                            {
+                                                errores.AddLast(new Error("Semántico", "Una llave primaria no puede ser Null.", Linea, Columna));
+                                                return null;
+                                            }
+                                            primary.AddLast(col);
+                                        }
+                                    }
 
-                                            if (dato.Rol == Rol.PRIMARY)
+
+                                    if (!tabla.Insertar(datos, primary))
+                                        errores.AddLast(new Error("Semántico", "No se pueden insertar valores con la misma llave primaria.", Linea, Columna));
+                                    else
+                                    {
+                                        tabla.Contador++;
+                                        Correcto = true;
+                                    }
+
+                                    return null;
+                                }
+                                else
+                                    errores.AddLast(new Error("Semántico", "La lista de campos no corresponde a la lista de valores.", Linea, Columna));
+                            }
+                            else
+                            {
+                                if (tabla.Cabecera.Simbolos.Count() == Valores.Count())
+                                {
+                                    Entorno datos = new Entorno(null, new LinkedList<Simbolo>());
+                                    LinkedList<Simbolo> primary = new LinkedList<Simbolo>();
+
+                                    for (int i = 0; i < Valores.Count(); i++)
+                                    {
+                                        Expresion valor = Valores.ElementAt(i);
+                                        object valValor = valor.GetValor(e, log, errores);
+                                        if (valValor != null)
+                                        {
+                                            if (valValor is Throw)
+                                                return valValor;
+
+                                            Simbolo col = tabla.Cabecera.Simbolos.ElementAt(i);
+
+                                            if (col.Tipo.IsCounter())
+                                            {
+                                                return new Throw("CounterTypeException", Linea, Columna);
+                                                //errores.AddLast(new Error("Semántico", "No se puede insertar un valor en una columna tipo Counter.", Linea, Columna));
+                                                //return null;
+                                            }
+
+                                            if (!col.Tipo.Equals(valor.Tipo))
+                                            {
+                                                Casteo cast = new Casteo(col.Tipo, new Literal(valor.Tipo, valValor, 0, 0), 0, 0)
+                                                {
+                                                    Mostrar = false
+                                                };
+                                                valValor = cast.GetValor(e, log, errores);
+
+                                                if (valValor == null)
+                                                {
+                                                    if (valValor is Throw)
+                                                        return valValor;
+
+                                                    return new Throw("ValuesException", Linea, Columna);
+                                                    //errores.AddLast(new Error("Semántico", "El tipo de la expresión no corresponde al tipo en la columna: " + col.Id + ".", Linea, Columna));
+                                                    //return null;
+                                                }
+                                            }
+
+                                            Simbolo dato = new Simbolo(col.Tipo, col.Rol, col.Id, valValor);
+                                            if (col.Rol == Rol.PRIMARY)
                                             {
                                                 if (valValor is Null)
                                                 {
                                                     errores.AddLast(new Error("Semántico", "Una llave primaria no puede ser Null.", Linea, Columna));
                                                     return null;
                                                 }
+                                                primary.AddLast(dato);
                                             }
+                                            datos.Add(dato);
                                         }
                                         else
-                                        {
-                                            Casteo cast = new Casteo(dato.Tipo, new Literal(valor.Tipo, valValor, 0, 0), 0, 0)
-                                            {
-                                                Mostrar = false
-                                            };
-                                            valValor = cast.GetValor(e, log, errores);
-
-                                            if (valValor != null)
-                                            {
-                                                if (valValor is Throw)
-                                                    return valValor;
-
-                                                dato.Valor = valValor;
-                                                continue;
-                                            }
-
-                                            return new Throw("ValuesException", Linea, Columna);
-                                            //errores.AddLast(new Error("Semántico", "El tipo de la expresión no corresponde al tipo en la columna: " + sim.Id + ".", Linea, Columna));
-                                            //return null;
-                                        }
+                                            return null;
                                     }
+
+                                    if (!tabla.Insertar(datos, primary))
+                                        errores.AddLast(new Error("Semántico", "No se pueden insertar valores con la misma llave primaria.", Linea, Columna));
                                     else
-                                    {
-                                        errores.AddLast(new Error("Semántico", "No hay un campo con el id: " + col +" en la Tabla.", Linea, Columna));
-                                        return null;
-                                    }
+                                        Correcto = true;
+                                    return null;
                                 }
                                 else
-                                    return null;
-                                
+                                    return new Throw("ValuesException", Linea, Columna);
+                                //errores.AddLast(new Error("Semántico", "Los valores no corresponden a las columnas en la Tabla.", Linea, Columna));
                             }
 
-                            foreach (Simbolo col in datos.Simbolos)
-                            {
-                                if (col.Tipo.IsCounter())
-                                    col.Valor = tabla.Contador;
-
-                                if (col.Rol == Rol.PRIMARY)
-                                {
-                                    if (col.Valor is Null)
-                                    {
-                                        errores.AddLast(new Error("Semántico", "Una llave primaria no puede ser Null.", Linea, Columna));
-                                        return null;
-                                    }
-                                    primary.AddLast(col);
-                                }
-                            }
-
-                            
-                            if (!tabla.Insertar(datos, primary))
-                                errores.AddLast(new Error("Semántico", "No se pueden insertar valores con la misma llave primaria.", Linea, Columna));
-                            else
-                            {
-                                tabla.Contador++;
-                                Correcto = true;
-                            }
-
-                            return null;
                         }
                         else
-                            errores.AddLast(new Error("Semántico", "La lista de campos no corresponde a la lista de valores.", Linea, Columna));
+                            return new Throw("TableDontExists", Linea, Columna);
+                        //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
                     }
                     else
-                    {
-                        if (tabla.Cabecera.Simbolos.Count() == Valores.Count())
-                        {
-                            Entorno datos = new Entorno(null, new LinkedList<Simbolo>());
-                            LinkedList<Simbolo> primary = new LinkedList<Simbolo>();
-
-                            for(int i = 0; i < Valores.Count(); i++)
-                            {
-                                Expresion valor = Valores.ElementAt(i);
-                                object valValor = valor.GetValor(e, log, errores);
-                                if (valValor != null)
-                                {
-                                    if (valValor is Throw)
-                                        return valValor;
-
-                                    Simbolo col = tabla.Cabecera.Simbolos.ElementAt(i);
-
-                                    if (col.Tipo.IsCounter())
-                                    {
-                                        return new Throw("CounterTypeException", Linea, Columna);
-                                        //errores.AddLast(new Error("Semántico", "No se puede insertar un valor en una columna tipo Counter.", Linea, Columna));
-                                        //return null;
-                                    }
-
-                                    if (!col.Tipo.Equals(valor.Tipo))
-                                    {
-                                        Casteo cast = new Casteo(col.Tipo, new Literal(valor.Tipo, valValor, 0, 0), 0, 0)
-                                        {
-                                            Mostrar = false
-                                        };
-                                        valValor = cast.GetValor(e, log, errores);
-
-                                        if (valValor == null)
-                                        {
-                                            if (valValor is Throw)
-                                                return valValor;
-
-                                            return new Throw("ValuesException", Linea, Columna);
-                                            //errores.AddLast(new Error("Semántico", "El tipo de la expresión no corresponde al tipo en la columna: " + col.Id + ".", Linea, Columna));
-                                            //return null;
-                                        }
-                                    }
-
-                                    Simbolo dato = new Simbolo(col.Tipo, col.Rol, col.Id, valValor);
-                                    if (col.Rol == Rol.PRIMARY)
-                                    {
-                                        if (valValor is Null)
-                                        {
-                                            errores.AddLast(new Error("Semántico", "Una llave primaria no puede ser Null.", Linea, Columna));
-                                            return null;
-                                        }
-                                        primary.AddLast(dato);
-                                    }
-                                    datos.Add(dato);
-                                }
-                                else
-                                    return null;
-                            }
-
-                            if (!tabla.Insertar(datos, primary))
-                                errores.AddLast(new Error("Semántico", "No se pueden insertar valores con la misma llave primaria.", Linea, Columna));
-                            else
-                                Correcto = true;
-                            return null;
-                        }
-                        else
-                            return new Throw("ValuesException", Linea, Columna);
-                            //errores.AddLast(new Error("Semántico", "Los valores no corresponden a las columnas en la Tabla.", Linea, Columna));
-                    }
-
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
                 else
-                    return new Throw("TableDontExists", Linea, Columna);
-                    //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);

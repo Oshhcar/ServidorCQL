@@ -46,140 +46,151 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
             if (actual != null)
             {
-                Simbolo sim = actual.GetTabla(Id);
-
-                if (sim != null)
+                if (e.Master.UsuarioActual != null)
                 {
-                    Tabla tabla = (Tabla)sim.Valor;
-
-                    if (Where == null)
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
                     {
-                        tabla.Datos.Clear();
-                    }
-                    else
-                    {
-                        LinkedList<Entorno> delete = new LinkedList<Entorno>();
+                        Simbolo sim = actual.GetTabla(Id);
 
-                        foreach (Entorno ent in tabla.Datos)
+                        if (sim != null)
                         {
-                            e.Master.EntornoActual = ent;
+                            Tabla tabla = (Tabla)sim.Valor;
 
-                            object valWhere = Where.GetValor(e, log, errores);
-                            if (valWhere != null)
+                            if (Where == null)
                             {
-                                if (valWhere is Throw)
-                                    return valWhere;
-
-                                if (Where.Tipo.IsBoolean())
-                                {
-                                    if (!(bool)valWhere)
-                                        continue;
-                                }
-                                else
-                                {
-                                    errores.AddLast(new Error("Semántico", "Cláusula Where debe ser booleana.", Linea, Columna));
-                                    return null;
-                                }
+                                tabla.Datos.Clear();
                             }
                             else
-                                return null;
-
-                            if (Target == null)
-                                delete.AddLast(ent);
-                            else
                             {
-                                if (Target is Acceso acc)
+                                LinkedList<Entorno> delete = new LinkedList<Entorno>();
+
+                                foreach (Entorno ent in tabla.Datos)
                                 {
-                                    object valorTarget = acc.Target.GetValor(e, log, errores);
+                                    e.Master.EntornoActual = ent;
 
-                                    if (valorTarget != null)
+                                    object valWhere = Where.GetValor(e, log, errores);
+                                    if (valWhere != null)
                                     {
-                                        if (valorTarget is Throw)
-                                            return valorTarget;
+                                        if (valWhere is Throw)
+                                            return valWhere;
 
-                                        if (acc.Target.Tipo.IsCollection())
+                                        if (Where.Tipo.IsBoolean())
                                         {
-                                            if (valorTarget is Null)
-                                                return new Throw("NullPointerException", Linea, Columna);
-                                            else
+                                            if (!(bool)valWhere)
+                                                continue;
+                                        }
+                                        else
+                                        {
+                                            errores.AddLast(new Error("Semántico", "Cláusula Where debe ser booleana.", Linea, Columna));
+                                            return null;
+                                        }
+                                    }
+                                    else
+                                        return null;
+
+                                    if (Target == null)
+                                        delete.AddLast(ent);
+                                    else
+                                    {
+                                        if (Target is Acceso acc)
+                                        {
+                                            object valorTarget = acc.Target.GetValor(e, log, errores);
+
+                                            if (valorTarget != null)
                                             {
-                                                Collection collection = (Collection)valorTarget;
+                                                if (valorTarget is Throw)
+                                                    return valorTarget;
 
-                                                object valExpr = acc.Expr.GetValor(e, log, errores);
-
-                                                if (valExpr != null)
+                                                if (acc.Target.Tipo.IsCollection())
                                                 {
-                                                    if (valExpr is Throw)
-                                                        return valExpr;
-
-                                                    if (!collection.Tipo.Clave.Equals(acc.Expr.Tipo))
+                                                    if (valorTarget is Null)
+                                                        return new Throw("NullPointerException", Linea, Columna);
+                                                    else
                                                     {
-                                                        Casteo cast = new Casteo(collection.Tipo.Clave, new Literal(acc.Expr.Tipo, valExpr, 0, 0), 0, 0)
-                                                        {
-                                                            Mostrar = false
-                                                        };
-                                                        valExpr = cast.GetValor(e, log, errores);
+                                                        Collection collection = (Collection)valorTarget;
 
-                                                        if (valExpr == null)
-                                                        {
-                                                            errores.AddLast(new Error("Semántico", "El tipo de la clave no coincide con el declarado en el Collection: " + collection.Tipo.Clave.Type.ToString() + ".", Linea, Columna));
-                                                            continue;
-                                                        }
-                                                        else
+                                                        object valExpr = acc.Expr.GetValor(e, log, errores);
+
+                                                        if (valExpr != null)
                                                         {
                                                             if (valExpr is Throw)
                                                                 return valExpr;
+
+                                                            if (!collection.Tipo.Clave.Equals(acc.Expr.Tipo))
+                                                            {
+                                                                Casteo cast = new Casteo(collection.Tipo.Clave, new Literal(acc.Expr.Tipo, valExpr, 0, 0), 0, 0)
+                                                                {
+                                                                    Mostrar = false
+                                                                };
+                                                                valExpr = cast.GetValor(e, log, errores);
+
+                                                                if (valExpr == null)
+                                                                {
+                                                                    errores.AddLast(new Error("Semántico", "El tipo de la clave no coincide con el declarado en el Collection: " + collection.Tipo.Clave.Type.ToString() + ".", Linea, Columna));
+                                                                    continue;
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (valExpr is Throw)
+                                                                        return valExpr;
+                                                                }
+
+                                                            }
+
+                                                            if (acc.Target.Tipo.IsList())
+                                                            {
+                                                                if (!collection.RemoveList(valExpr))
+                                                                    return new Throw("IndexOutException", Linea, Columna);
+                                                            }
+                                                            else if (acc.Target.Tipo.IsSet())
+                                                            {
+                                                                if (collection.Remove(valExpr))
+                                                                {
+                                                                    collection.Ordenar();
+                                                                }
+                                                                else
+                                                                    return new Throw("IndexOutException", Linea, Columna);
+                                                            }
+                                                            else
+                                                            {
+                                                                if (!collection.Remove(valExpr))
+                                                                    errores.AddLast(new Error("Semántico", "No existe un valor con la clave: " + valExpr.ToString() + " en Map.", Linea, Columna));
+
+                                                            }
                                                         }
-
-                                                    }
-
-                                                    if (acc.Target.Tipo.IsList())
-                                                    {
-                                                        if (!collection.RemoveList(valExpr))
-                                                            return new Throw("IndexOutException", Linea, Columna);
-                                                    }
-                                                    else if (acc.Target.Tipo.IsSet())
-                                                    {
-                                                        if (collection.Remove(valExpr))
-                                                        {
-                                                            collection.Ordenar();
-                                                        }
-                                                        else
-                                                            return new Throw("IndexOutException", Linea, Columna);
-                                                    }
-                                                    else
-                                                    {
-                                                        if (!collection.Remove(valExpr))
-                                                            errores.AddLast(new Error("Semántico", "No existe un valor con la clave: " + valExpr.ToString() + " en Map.", Linea, Columna));
-
                                                     }
                                                 }
+                                                errores.AddLast(new Error("Semántico", "La variable debe ser de tipo Map, List o Set.", Linea, Columna));
+
                                             }
                                         }
-                                        errores.AddLast(new Error("Semántico", "La variable debe ser de tipo Map, List o Set.", Linea, Columna));
-
                                     }
                                 }
+
+                                e.Master.EntornoActual = null;
+
+                                foreach (Entorno ent in delete)
+                                {
+                                    tabla.Datos.Remove(ent);
+                                }
                             }
+                            Correcto = true;
+                            return null;
                         }
-
-                        e.Master.EntornoActual = null;
-
-                        foreach (Entorno ent in delete)
-                        {
-                            tabla.Datos.Remove(ent);
-                        }
+                        else
+                            return new Throw("TableDontExists", Linea, Columna);
+                        //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
                     }
-                    Correcto = true;
-                    return null;
+                    else
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
                 else
-                    return new Throw("TableDontExists", Linea, Columna);
-                    //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);
-                //errores.AddLast(new Error("Semántico", "No se ha seleccionado una base de datos, no se pudo Eliminar.", Linea, Columna));
+            //errores.AddLast(new Error("Semántico", "No se ha seleccionado una base de datos, no se pudo Eliminar.", Linea, Columna));
+            return null;
         }
     }
 }

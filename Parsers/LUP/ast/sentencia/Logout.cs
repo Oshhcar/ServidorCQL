@@ -20,15 +20,12 @@ namespace GramaticasCQL.Parsers.LUP.ast.sentencia
 
             if (!Nombre.Equals(""))
             {
-                Usuario user = master.GetUsuario(Nombre);
+                Usuario user = master.GetUsuario(Nombre.Trim());
 
                 if (user != null)
                 {
-                    if (user.Id.Equals(Nombre))
-                    {
-                        respuesta.AddLast(new Salida(1, "[+LOGOUT]\n\t[SUCCESS]\n[-LOGOUT]"));
-                        return null;
-                    }
+                    respuesta.AddLast(new Salida(1, "[+LOGOUT]\n\t[SUCCESS]\n[-LOGOUT]"));
+                    return null;
                 }
             }
 

@@ -34,53 +34,64 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
             if (actual != null)
             {
-                Simbolo sim = actual.GetTabla(Id);
-
-                if (sim != null)
+                if (e.Master.UsuarioActual != null)
                 {
-                    Tabla tabla = (Tabla)sim.Valor;
-
-                    foreach (Entorno ent in tabla.Datos)
+                    if (e.Master.UsuarioActual.GetPermiso(actual.Id))
                     {
-                        e.Master.EntornoActual = ent;
 
-                        if (Where != null)
+                        Simbolo sim = actual.GetTabla(Id);
+
+                        if (sim != null)
                         {
-                            object valWhere = Where.GetValor(e, log, errores);
-                            if (valWhere != null)
-                            {
-                                if (valWhere is Throw)
-                                    return valWhere;
+                            Tabla tabla = (Tabla)sim.Valor;
 
-                                if (Where.Tipo.IsBoolean())
+                            foreach (Entorno ent in tabla.Datos)
+                            {
+                                e.Master.EntornoActual = ent;
+
+                                if (Where != null)
                                 {
-                                    if (!(bool)valWhere)
-                                        continue;
+                                    object valWhere = Where.GetValor(e, log, errores);
+                                    if (valWhere != null)
+                                    {
+                                        if (valWhere is Throw)
+                                            return valWhere;
+
+                                        if (Where.Tipo.IsBoolean())
+                                        {
+                                            if (!(bool)valWhere)
+                                                continue;
+                                        }
+                                        else
+                                        {
+                                            errores.AddLast(new Error("Semántico", "Cláusula Where debe ser booleana.", Linea, Columna));
+                                            return null;
+                                        }
+                                    }
+                                    else
+                                        return null;
                                 }
-                                else
+
+                                foreach (Instruccion asigna in Asignaciones)
                                 {
-                                    errores.AddLast(new Error("Semántico", "Cláusula Where debe ser booleana.", Linea, Columna));
-                                    return null;
+                                    object obj = asigna.Ejecutar(e, funcion, ciclo, sw, tc, log, errores);
+
+                                    if (obj is Throw)
+                                        return obj;
                                 }
                             }
-                            else
-                                return null;
+                            e.Master.EntornoActual = null;
+                            Correcto = true;
                         }
-
-                        foreach (Instruccion asigna in Asignaciones)
-                        {
-                            object obj = asigna.Ejecutar(e, funcion, ciclo, sw, tc, log, errores);
-
-                            if (obj is Throw)
-                                return obj;
-                        }
+                        else
+                            return new Throw("TableDontExists", Linea, Columna);
+                        //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
                     }
-                    e.Master.EntornoActual = null;
-                    Correcto = true;
+                    else
+                        errores.AddLast(new Error("Semántico", "El Usuario no tiene permisos sobre: " + actual.Id + ".", Linea, Columna));
                 }
                 else
-                    return new Throw("TableDontExists", Linea, Columna);
-                    //errores.AddLast(new Error("Semántico", "No existe una Tabla con el id: " + Id + " en la base de datos.", Linea, Columna));
+                    errores.AddLast(new Error("Semántico", "No hay un Usuario logeado.", Linea, Columna));
             }
             else
                 return new Throw("UseBDException", Linea, Columna);
