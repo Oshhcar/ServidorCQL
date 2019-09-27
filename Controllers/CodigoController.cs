@@ -4,18 +4,21 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using GramaticasCQL.Models;
 using GramaticasCQL.Parsers;
 
 namespace GramaticasCQL.Controllers
 {
+    [EnableCors(origins: "*", headers:"*", methods:"*")]
     public class CodigoController : ApiController
     {
 
-        //POST api/Codigo
+        //POST api/Codigo HttpResponseMessage
         public IHttpActionResult Post([FromBody]Codigo codigo)
         {
             if (ModelState.IsValid)
@@ -58,10 +61,14 @@ namespace GramaticasCQL.Controllers
                     salida += "[-ERROR]\n";
                 }
 
+                //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
+                //response.Content = new StringContent(salida, Encoding.Unicode);
+
                 return Ok(salida);
 
             }
             return BadRequest(ModelState);
+            //return Request.CreateResponse(HttpStatusCode.NotFound, "Error!"); ;
         }
     }
 }
