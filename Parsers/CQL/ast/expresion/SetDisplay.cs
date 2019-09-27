@@ -44,7 +44,14 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                             return valValor;
 
                         if (set.Tipo.Valor.Equals(valor.Tipo))
-                            set.Insert(set.Posicion++, valValor);
+                        {
+                            if (!set.Contains(valValor))
+                            {
+                                set.Insert(set.Posicion++, valValor);
+                            }
+                            else
+                                errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valValor.ToString() + " en el Set.", Linea, Columna));
+                        }
                         else
                         {
                             Casteo cast = new Casteo(set.Tipo.Valor, new Literal(valor.Tipo, valValor, 0, 0), 0, 0)
@@ -59,11 +66,17 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                                 if (valValor is Throw)
                                     return valValor;
 
-                                set.Insert(set.Posicion++, valValor);
+                                if (!set.Contains(valValor))
+                                {
+                                    set.Insert(set.Posicion++, valValor);
+                                }
+                                else
+                                    errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valValor.ToString() + " en el Set.", Linea, Columna));
+
                                 continue;
                             }
 
-                            errores.AddLast(new Error("Semántico", "El tipo no coinciden con el valor del List.", Linea, Columna));
+                            errores.AddLast(new Error("Semántico", "El tipo no coinciden con el valor del Set.", Linea, Columna));
                         }
                         //continue;
                     }

@@ -139,6 +139,18 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion
 
                         if (acceso.Tipo.Equals(Expr.Tipo))
                         {
+                            if (acceso.Collec != null)
+                            {
+                                if (acceso.Collec.Tipo.IsSet())
+                                {
+                                    if (acceso.Collec.Contains(valExpr))
+                                    {
+                                        errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valExpr.ToString() + " en el Set.", Linea, Columna));
+                                        return null;
+                                    }
+                                }
+                            }
+
                             collection.Valor = valExpr;
                             return null;
                         }
@@ -154,6 +166,18 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion
                             {
                                 if (valExpr is Throw)
                                     return valExpr;
+
+                                if (acceso.Collec != null)
+                                {
+                                    if (acceso.Collec.Tipo.IsSet())
+                                    {
+                                        if (acceso.Collec.Contains(valExpr))
+                                        {
+                                            errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valExpr.ToString() + " en el Set.", Linea, Columna));
+                                            return null;
+                                        }
+                                    }
+                                }
 
                                 collection.Valor = valExpr;
                                 return null;

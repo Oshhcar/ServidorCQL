@@ -15,11 +15,13 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
             Target = target;
             Expr = expr;
             GetCollection = false;
+            Collec = null;
         }
 
         public Expresion Target { get; set; }
         public Expresion Expr { get; set; }
         public bool GetCollection { get; set; }
+        public Collection Collec { get; set; }
 
         public override object GetValor(Entorno e, LinkedList<Salida> log, LinkedList<Error> errores)
         {
@@ -42,6 +44,7 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                         if (!(valTarget is Null))
                         {
                             Collection collection = (Collection)valTarget;
+                            Collec = collection;
 
                             if (collection.Tipo.Clave.Equals(Expr.Tipo))
                             {

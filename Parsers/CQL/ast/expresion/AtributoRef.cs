@@ -421,8 +421,14 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                                                 Collection set = (Collection)valorTarget;
                                                 if (set.Tipo.Valor.Equals(parametro1.Tipo))
                                                 {
-                                                    set.Insert(set.Posicion++, valParametro1);
-                                                    set.Ordenar();
+                                                    if (!set.Contains(valParametro1))
+                                                    {
+                                                        set.Insert(set.Posicion++, valParametro1);
+                                                        set.Ordenar();
+                                                    }
+                                                    else
+                                                        errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valParametro1.ToString() + " en el Set.", Linea, Columna));
+
                                                     return null;
                                                 }
                                                 else
@@ -438,8 +444,13 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                                                         if (valParametro1 is Throw)
                                                             return valParametro1;
 
-                                                        set.Insert(set.Posicion++, valParametro1);
-                                                        set.Ordenar();
+                                                        if (!set.Contains(valParametro1))
+                                                        {
+                                                            set.Insert(set.Posicion++, valParametro1);
+                                                            set.Ordenar();
+                                                        }
+                                                        else
+                                                            errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valParametro1.ToString() + " en el Set.", Linea, Columna));
                                                         return null;
                                                     }
 
@@ -574,8 +585,13 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                                                     Collection set = (Collection)valorTarget;
                                                     if (set.Tipo.Valor.Equals(parametro1.Tipo))
                                                     {
-                                                        set.Insert(set.Posicion++, valParametro1);
-                                                        set.Ordenar();
+                                                        if (!set.Contains(valParametro1))
+                                                        {
+                                                            set.Insert(set.Posicion++, valParametro1);
+                                                            set.Ordenar();
+                                                        }
+                                                        else
+                                                            errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valParametro1.ToString() + " en el Set.", Linea, Columna));
                                                         return null;
                                                     }
                                                     else
@@ -591,8 +607,13 @@ namespace GramaticasCQL.Parsers.CQL.ast.expresion
                                                             if (valParametro1 is Throw)
                                                                 return valParametro1;
 
-                                                            set.Insert(set.Posicion++, valParametro1);
-                                                            set.Ordenar();
+                                                            if (!set.Contains(valParametro1))
+                                                            {
+                                                                set.Insert(set.Posicion++, valParametro1);
+                                                                set.Ordenar();
+                                                            }
+                                                            else
+                                                                errores.AddLast(new Error("Semántico", "Ya existe el valor: " + valParametro1.ToString() + " en el Set.", Linea, Columna));
                                                             return null;
                                                         }
 
