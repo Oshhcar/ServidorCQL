@@ -20,7 +20,7 @@ namespace GramaticasCQL.Parsers.LUP.ast.sentencia
 
             if (!Nombre.Equals(""))
             {
-                Usuario user = master.GetUsuario(Nombre.Trim());
+                Usuario user = master.GetUsuario(Nombre);
 
                 if (user != null)
                 {

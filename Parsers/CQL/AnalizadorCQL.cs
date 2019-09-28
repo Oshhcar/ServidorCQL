@@ -377,7 +377,7 @@ namespace GramaticasCQL.Parsers.CQL
                 case "USERDEF":
                     linea = hijos[0].Token.Location.Line + 1;
                     columna = hijos[0].Token.Location.Column + 1;
-                    Bloque += "create user " + hijos[2].Token.Text + " with password " + hijos[5].Token.Text;
+                    Bloque += "create user " + hijos[2].Token.Text + " with password \"" + hijos[5].Token.Text+"\"";
                     return new UsuarioCrear(hijos[2].Token.Text, new Cadena(hijos[5].Token.Text), linea, columna);
                 case "GRANT":
                     linea = hijos[0].Token.Location.Line + 1;

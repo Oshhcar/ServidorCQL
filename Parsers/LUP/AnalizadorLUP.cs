@@ -66,7 +66,7 @@ namespace GramaticasCQL.Parsers.LUP
                 case "PASS":
                     linea = hijos[3].Token.Text.Length - 3;
                     if (linea >= 0)
-                        return hijos[3].Token.Text.Substring(1, linea).ToLower().Trim();
+                        return hijos[3].Token.Text.Substring(1, linea).Trim();
                     return "";
                 case "LOGOUT":
                     linea = hijos[0].Token.Location.Line + 1;
@@ -79,7 +79,7 @@ namespace GramaticasCQL.Parsers.LUP
                 case "DATA":
                     linea = hijos[3].Token.Text.Length - 3;
                     if (linea >= 0)
-                        return hijos[3].Token.Text.Substring(1, linea).ToLower();
+                        return hijos[3].Token.Text.Substring(1, linea);
                     return "";
                 case "STRUC":
                     linea = hijos[0].Token.Location.Line + 1;
