@@ -44,21 +44,21 @@ namespace GramaticasCQL.Parsers.LUP.ast.sentencia
                                 }
                                 catch (Exception ex)
                                 {
-                                    respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\tError en Data, revice las Instrucciones.\n" + ex.Message + "[-MESSAGE]"));
+                                    respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\t$Error en Data, revice las Instrucciones.\n" + ex.Message + "$[-MESSAGE]"));
                                 }
                             }
                             else
-                                respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\tError en Data, revice las Instrucciones.\n[-MESSAGE]"));
+                                respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\t$Error en Data, revice las Instrucciones.$\n[-MESSAGE]"));
                         }
                         else
-                            respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\tError en Data, revice las Instrucciones.\n[-MESSAGE]"));
+                            respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\t$Error en Data, revice las Instrucciones.$\n[-MESSAGE]"));
                     }
                 }
                 else
-                    respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\tEl usuario que hizo la consulta no existe.\n[-MESSAGE]"));
+                    respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\t$El usuario que hizo la consulta no existe.$\n[-MESSAGE]"));
             }
             else
-                respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\tEl parametro User no puede estar vacío.\n[-MESSAGE]"));
+                respuesta.AddLast(new Salida(1, "[+MESSAGE]\n\t$El parametro User no puede estar vacío.$\n[-MESSAGE]"));
 
             return null;
         }

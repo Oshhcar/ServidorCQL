@@ -46,18 +46,18 @@ namespace GramaticasCQL.Controllers
                 foreach (Salida s in BaseDatos.Log)
                 {
                     if (s.Tipo == 1)
-                        salida += "[+MESSAGE]\n\t" + s.Contenido + "\n[-MESSAGE]\n";
+                        salida += "[+MESSAGE]\n\t$" + s.Contenido + "$\n[-MESSAGE]\n";
                     else
-                        salida += "[+DATA]\n" + s.Contenido + "\n[-DATA]\n";
+                        salida += "[+DATA]\n$" + s.Contenido + "$\n[-DATA]\n";
                 }
 
                 foreach (Error e in BaseDatos.Errores)
                 {
                     salida += "[+ERROR]\n";
-                    salida += "\t[+LINE]\n\t\t" + e.Linea + "\n\t[-LINE]\n";
-                    salida += "\t[+COLUMN]\n\t\t" + e.Columna + "\n\t[-COLUMN]\n";
-                    salida += "\t[+TYPE]\n\t\t" + e.Valor + "\n\t[-TYPE]\n";
-                    salida += "\t[+DESC]\n\t\t" + e.Descripcion + "\n\t[-DESC]\n";
+                    salida += "\t[+LINE]\n\t\t$" + e.Linea + "$\n\t[-LINE]\n";
+                    salida += "\t[+COLUMN]\n\t\t$" + e.Columna + "$\n\t[-COLUMN]\n";
+                    salida += "\t[+TYPE]\n\t\t$" + e.Valor + "$\n\t[-TYPE]\n";
+                    salida += "\t[+DESC]\n\t\t$" + e.Descripcion + "$\n\t[-DESC]\n";
                     salida += "[-ERROR]\n";
                 }
 
