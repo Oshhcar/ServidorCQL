@@ -360,8 +360,9 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
                                 if (data.Count() >= 1)
                                 {
-                                    salida = "<table> \n";
-
+                                    salida = "<div class=\"table - responsive\">";
+                                    salida += "<table class=\"table table-striped table - sm\"> \n";
+                                    salida += "<thead>\n";
                                     salida += "<tr> \n";
 
                                     foreach (Simbolo col in data.ElementAt(0).Simbolos)
@@ -370,7 +371,8 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
                                     }
 
                                     salida += "</tr>\n";
-
+                                    salida += "</thead>\n";
+                                    salida += "<tbody>\n";
                                     for (int i = 0; i <= limite; i++)
                                     {
                                         Entorno ent = data.ElementAt(i);
@@ -383,8 +385,9 @@ namespace GramaticasCQL.Parsers.CQL.ast.instruccion.ddl
 
                                         salida += "</tr>\n";
                                     }
-
-                                    salida += "</table>\n\n\n";
+                                    salida += "</tbody>\n";
+                                    salida += "</table>\n";
+                                    salida += "</div>\n\n";
 
                                 }
                                 else
